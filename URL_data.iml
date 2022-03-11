@@ -17,5 +17,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Gradle: net.sourceforge.htmlunit:htmlunit:2.58.0" level="project" />
   </component>
 </module>

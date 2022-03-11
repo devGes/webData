@@ -11,20 +11,24 @@ import static com.jared.Utilities.readFromJson;
 public class Program {
 
     public static void main(String[] args) {
-        JSONObject inputs = readFromJson(".\\src\\com\\jared\\AmazonInput.json");
+        // Loads JSON input values
+        JSONObject inputsJson = readFromJson(".\\src\\com\\jared\\AmazonInput.json");
 
+        // Collects data from site (using inputsJson)
         SiteScraper siteScraper = new SiteScraper();
-        List<Item> scrapedData = siteScraper.scrapeSite(inputs);
+        List<Item> scrapedData = siteScraper.scrapeSite(inputsJson);
 
+        // Combines all scraped data into 1 JSONArray
         JSONArray jsonArray = new JSONArray();
         for (Item item : scrapedData) {
             jsonArray.add( item.HashMaptoJSON());
         }
 
+        // writes JSONArray of scraped data to file
         Utilities.writeToFile(
                 jsonArray.toJSONString(),
-                "output.json",
-                ".\\data");
+                inputsJson.get("fileName").toString(),
+                inputsJson.get("folderName").toString());
 
     }
 
