@@ -5,10 +5,12 @@
   "image" : "a-dynamic-image",
   "title" : "a-dynamic-image",
   "price" : "a-size-base a-color-price",
+
   "authorLink" : "a-size-small a-link-child",
   "authorNoLink" : "a-size-small a-color-base",
   "multiple" : "a-link-normal",
   "rating5Star" : "a-icon-alt",
+
   "xPath" : "zg-carousel-general-faceout",
   "xPathPart" : "general-faceout",
 
