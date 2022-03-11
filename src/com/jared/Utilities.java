@@ -14,6 +14,12 @@ import java.nio.file.Paths;
 
 public class Utilities {
 
+    /**
+     *
+     * @param fileData
+     * @param fileName
+     * @param folderName
+     */
     public static void writeToFile(String fileData, String fileName, String folderName) {
         try {
             Files.createDirectories(Paths.get(folderName));
@@ -27,10 +33,21 @@ public class Utilities {
         }
     }
 
+    /**
+     *
+     * @param obj
+     * @param fileName
+     * @param folderName
+     */
     public static void writeToFile(JSONArray obj, String fileName, String folderName) {
         writeToFile(obj.toJSONString(), fileName, folderName);
     }
 
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     public static JSONObject readFromJson(String fileName){
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();

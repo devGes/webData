@@ -4,6 +4,9 @@
   "rootIdOrName" : "gridItemRoot",
   "image" : "a-dynamic-image",
   "price" : "a-size-base a-color-price",
-  "author" : "a-size-small a-link-child",
-  "multiple" : "a-link-normal"
+  "authorLink" : "a-size-small a-link-child",
+  "authorNoLink" : "a-size-small a-color-base",
+  "multiple" : "a-link-normal",
+  "rating5Star" : "a-icon-alt"
+
 }
