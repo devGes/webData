@@ -1,19 +1,20 @@
     Amazon
 
-    "https://www.amazon.com/gp/new-releases/books/ref=zg_bsnr_nav_0"
-    "https://www.amazon.com/gp/new-releases/?ref_=nav_em_cs_newreleases_0_1_1_3"
-    "https://www.amazon.com/gp/new-releases/appliances/ref=zg_bsnr_nav_0"
-    "https://www.amazon.com/gp/new-releases/arts-crafts/ref=zg_bsnr_nav_0"
-    "https://www.amazon.com/gp/new-releases/arts-crafts/378733011/ref=zg_bsnr_nav_arts-crafts_1"
-    "https://www.amazon.com/gp/new-releases/arts-crafts/262597011/ref=zg_bsnr_nav_arts-crafts_2_12890801"
+"https://www.amazon.com/gp/new-releases/books/ref=zg_bsnr_nav_0"
+"https://www.amazon.com/gp/new-releases/?ref_=nav_em_cs_newreleases_0_1_1_3"
+"https://www.amazon.com/gp/new-releases/appliances/ref=zg_bsnr_nav_0"
+"https://www.amazon.com/gp/new-releases/arts-crafts/ref=zg_bsnr_nav_0"
+"https://www.amazon.com/gp/new-releases/arts-crafts/378733011/ref=zg_bsnr_nav_arts-crafts_1"
+"https://www.amazon.com/gp/new-releases/arts-crafts/262597011/ref=zg_bsnr_nav_arts-crafts_2_12890801"
 
-    "https://www.amazon.com/gp/bestsellers/?ref_=nav_cs_bestsellers"
-    "https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories/zgbs/amazon-devices/ref=zg_bs_nav_0"
-    "https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories-Amazon-Devices/zgbs/amazon-devices/2102313011/ref=zg_bs_nav_amazon-devices_1"
-    "https://www.amazon.com/Best-Sellers-Entertainment-Collectibles/zgbs/entertainment-collectibles/ref=zg_bs_nav_0"
+"https://www.amazon.com/gp/bestsellers/?ref_=nav_cs_bestsellers"
+"https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories/zgbs/amazon-devices/ref=zg_bs_nav_0"
+"https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories-Amazon-Devices/zgbs/amazon-devices/2102313011/ref=zg_bs_nav_amazon-devices_1"
+"https://www.amazon.com/Best-Sellers-Entertainment-Collectibles/zgbs/entertainment-collectibles/ref=zg_bs_nav_0"
 
 
     DNU Amazon
     *** Error -> To discuss automated access to Amazon data please contact api-services-support@amazon.com.
-    "https://www.amazon.com/s?bbn=1292115011&rh=n%3A1292115011%2Cp_n_feature_four_browse-bin%3A23696076011&dc&qid=1646980563&rnid=23696070011&ref=lp_1292115011_nr_p_n_feature_four_browse-bin_0"
-    "https://www.amazon.com/s?i=computers&bbn=1292115011&rh=n%3A1292115011%2Cp_n_feature_four_browse-bin%3A23696076011%2Cp_89%3ADell&dc&qid=1647009640&rnid=2528832011&ref=sr_nr_p_89_1"
+"https://www.amazon.com/s?bbn=1292115011&rh=n%3A1292115011%2Cp_n_feature_four_browse-bin%3A23696076011&dc&qid=1646980563&rnid=23696070011&ref=lp_1292115011_nr_p_n_feature_four_browse-bin_0"
+"https://www.amazon.com/s?i=computers&bbn=1292115011&rh=n%3A1292115011%2Cp_n_feature_four_browse-bin%3A23696076011%2Cp_89%3ADell&dc&qid=1647009640&rnid=2528832011&ref=sr_nr_p_89_1"
+"https://www.amazon.com/b/?node=11058331&ref_=Oct_d_odnav_d_11058281_0&pd_rd_w=somem&pf_rd_p=0f6f8a08-29ea-497e-8cb4-0ccf91422740&pf_rd_r=X3RKKP3NBPJ3GYR6HW97&pd_rd_r=e84d3e71-f024-4be2-9373-6ef0210a98c0&pd_rd_wg=c263W"

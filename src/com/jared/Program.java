@@ -35,7 +35,7 @@ public class Program {
 
     }
 
-    public static void extractIndividualPages() {
+    public static ArrayList<String> extractIndividualPages() {
         JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\AmazonProductURLs.json");
         ArrayList<String> urlInputs = new ArrayList<>();
 
@@ -43,6 +43,7 @@ public class Program {
             urlInputs.add(extractAmzIdFromUrl(X.toString()));
             System.out.println(extractAmzIdFromUrl(X.toString()));
         }
+        return urlInputs;
 
 
 

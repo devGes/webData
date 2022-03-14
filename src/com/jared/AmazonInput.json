@@ -1,6 +1,6 @@
 {
   "website" : "www.amazon.com",
-  "url" : "https://www.amazon.com/gp/new-releases/appliances/ref=zg_bsnr_nav_0",
+  "url" : "https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories-Amazon-Devices/zgbs/amazon-devices/2102313011/ref=zg_bs_nav_amazon-devices_1",
 
   "image" : "a-dynamic-image",
   "title" : "a-dynamic-image",
@@ -9,6 +9,7 @@
   "authorNoLink" : "a-size-small a-color-base",
   "multiple" : "a-link-normal",
   "rating5Star" : "a-icon-alt",
+  "amzId" : "data-asin",
 
   "xPath" : "zg-carousel-general-faceout",
   "xPathPart" : "general-faceout",

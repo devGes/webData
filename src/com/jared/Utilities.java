@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +27,7 @@ public class Utilities {
         try {
             Files.createDirectories(Paths.get(folderName));
             FileWriter myWriter = new FileWriter(folderName + "\\" + fileName);
+
             myWriter.write(fileData);
             myWriter.flush();
             myWriter.close();
@@ -138,7 +138,7 @@ public class Utilities {
 
         // filters each item on keys (# and required)
         for (Item item : scrapedData) {
-            if (item.itemSize() == 0) {
+            if (item.size() == 0) {
                 jsonArrayBlank.add( item.HashMaptoJSON());
             } else if(isMatchAllRequiredKeys( requiredKeys, item )) {
                 jsonArray.add( item.HashMaptoJSON());
@@ -151,7 +151,7 @@ public class Utilities {
         System.out.printf("%d partial items.%n",     jsonArrayPartial.size());
         System.out.printf("%d filled items. (%s)%n", jsonArray.size(), requiredKeys);
 
-//         Main file (jsonArray) is written elsewhere, this is for debugging.
+//         Main file (jsonArray) is written elsewhere (Program.java), this is for debugging.
         if (!jsonArrayPartial.isEmpty()) {
             Utilities.writeToFile(
                     jsonArrayPartial,

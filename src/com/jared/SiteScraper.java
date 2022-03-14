@@ -24,20 +24,12 @@ public class SiteScraper {
 //        web.setCssEnabled(false);
 
         HtmlPage page = getPage(web, inputsJson.get("url").toString());
-
         assert page != null;
 
         // Two methods for finding elements.
 //        List<HtmlElement> elements = page.getElementsByIdAndOrName( inputsJson.get("rootIdOrName").toString() );
 
-        List<HtmlElement> elements = new ArrayList<HtmlElement>();
-        for (HtmlElement elem : page.getHtmlElementDescendants()) {
-            String elemClass = elem.getAttribute("class");
-            if (elemClass.contains(inputsJson.get("xPathPart").toString())) {
-                elements.add(elem);
-            }
-        }
-        System.out.println(elements.size() + " root elements");
+        List<HtmlElement> elements = getElements(page, inputsJson);
 
         List<Item> products = new ArrayList<>();
         Item item;
@@ -61,6 +53,10 @@ public class SiteScraper {
 
                 if (hasClassMatch(childElem, inputsJson, "rating5Star")) {
                     item.setAttribute("rating5Star", childElem.asText());
+                }
+
+                if (hasClassMatch(childElem, inputsJson, "amzId")) {
+                    item.setAttribute("amzId", childElem.asText());
                 }
 
 
@@ -87,6 +83,18 @@ public class SiteScraper {
         return products;
     }
 
+    private static List<HtmlElement> getElements(HtmlPage page, JSONObject inputsJson) {
+        List<HtmlElement> elements = new ArrayList<HtmlElement>();
+        for (HtmlElement elem : page.getHtmlElementDescendants()) {
+            String elemClass = elem.getAttribute("class");
+            if (elemClass.contains(inputsJson.get("xPathPart").toString())) {
+                elements.add(elem);
+            }
+        }
+        System.out.println(elements.size() + " root elements");
+        return elements;
+    }
+
     /**
      *
      * @param elementClasses
@@ -97,7 +105,7 @@ public class SiteScraper {
         for(String searchClass : searchClasses) {
             boolean found = false;
             for(String elementClass : elementClasses) {
-                if(elementClass.equals(searchClass)){
+                if(elementClass.contains(searchClass)){
                     found = true;
                     break;
                 }
