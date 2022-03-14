@@ -3,7 +3,7 @@ import org.json.simple.JSONObject;
 
 import java.util.*;
 
-public class Item {
+public class Item extends HashMap {
     private HashMap<String, String> dict = new HashMap<String,String>();
 
     public Item() {
@@ -30,6 +30,18 @@ public class Item {
 
     public JSONObject HashMaptoJSON() {
         return new JSONObject(this.dict);
+    }
+
+    public int itemSize() {
+        return this.dict.size();
+    }
+
+    public Set getSet() {
+        return this.dict.keySet();
+    }
+
+    public boolean hasKey(String key) {
+        return this.dict.containsKey(key);
     }
 
 }

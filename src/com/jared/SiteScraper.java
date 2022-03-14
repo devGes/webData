@@ -1,5 +1,6 @@
 package com.jared;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.json.simple.JSONObject;
@@ -8,7 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SiteScraper {
@@ -22,7 +24,7 @@ public class SiteScraper {
 
         WebClient web = new WebClient();
         web.setJavaScriptEnabled(false);
-        web.setCssEnabled(false);
+//        web.setCssEnabled(false);
 
         HtmlPage page = getPage(web, inputsJson.get("url").toString());
 
@@ -143,6 +145,7 @@ public class SiteScraper {
             return null;
         }
     }
+
 
 
 }
