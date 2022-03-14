@@ -1,6 +1,5 @@
 package com.jared;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.json.simple.JSONObject;
@@ -9,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class SiteScraper {
@@ -20,7 +17,7 @@ public class SiteScraper {
      * @param inputsJson
      * @return
      */
-    public List<Item> scrapeSite(JSONObject inputsJson) {
+    public static List<Item> scrapeSite(JSONObject inputsJson) {
 
         WebClient web = new WebClient();
         web.setJavaScriptEnabled(false);
@@ -36,9 +33,6 @@ public class SiteScraper {
         List<HtmlElement> elements = new ArrayList<HtmlElement>();
         for (HtmlElement elem : page.getHtmlElementDescendants()) {
             String elemClass = elem.getAttribute("class");
-//            if (elemClass.length() != 0) {
-//                System.out.println(elemClass);
-//            }
             if (elemClass.contains(inputsJson.get("xPathPart").toString())) {
                 elements.add(elem);
             }
