@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import static com.jared.Utilities.extractAmzIdFromUrl;
 
 
 public class SiteScraper {
@@ -23,11 +26,8 @@ public class SiteScraper {
         web.setJavaScriptEnabled(false);
 //        web.setCssEnabled(false);
 
-        HtmlPage page = getPage(web, inputsJson.get("url").toString());
+        HtmlPage page = getPage(web, inputsJson.get("SearchURL").toString());
         assert page != null;
-
-        // Two methods for finding elements.
-//        List<HtmlElement> elements = page.getElementsByIdAndOrName( inputsJson.get("rootIdOrName").toString() );
 
         List<HtmlElement> elements = getElements(page, inputsJson);
 
@@ -36,44 +36,41 @@ public class SiteScraper {
 
         for (HtmlElement elem : elements) {
             item = new Item();
+            item.setAttribute("amz1D", elem.getAttribute((String) inputsJson.get("amzId")));
 
             for (HtmlElement childElem : elem.getHtmlElementDescendants()){
 
-                if (hasClassMatch(childElem, inputsJson, "price")) {
-                    item.setAttribute("price", childElem.asText());
+                if (childElem.getAttribute("class").equals(inputsJson.get("priceWhole"))) {
+                    item.setAttribute("priceWhole", childElem.asText());
                 }
 
-                if (hasClassMatch(childElem, inputsJson, "authorLink")) {
-                    item.setAttribute("author", childElem.asText());
+                if (childElem.getAttribute("class").equals(inputsJson.get("priceSymbol"))) {
+                    item.setAttribute("priceSymbol", childElem.asText());
                 }
 
-                if (hasClassMatch(childElem, inputsJson, "authorNoLink")) {
-                    item.setAttribute("author", childElem.asText());
+                if (childElem.getAttribute("class").equals(inputsJson.get("priceFraction"))) {
+                    item.setAttribute("priceFraction", childElem.asText());
                 }
 
-                if (hasClassMatch(childElem, inputsJson, "rating5Star")) {
+                if (childElem.getAttribute("class").equals(inputsJson.get("rating5Star"))) {
                     item.setAttribute("rating5Star", childElem.asText());
                 }
 
-                if (hasClassMatch(childElem, inputsJson, "amzId")) {
-                    item.setAttribute("amzId", childElem.asText());
+
+                if (hasClassMatch(childElem, inputsJson, "url")) {
+                    String urlNew = inputsJson.get("website") + childElem.getAttribute("href");
+                    item.setAttribute("url", urlNew);
                 }
 
 
-                if (hasClassMatch(childElem, inputsJson, "image")) {
+                if (Objects.equals(childElem.getQualifiedName().toString(), "img")) {
                     item.setAttribute("image", childElem.getAttribute("src"));
                 }
 
-                if (hasClassMatch(childElem, inputsJson, "title")) {
+                if (Objects.equals(childElem.getQualifiedName().toString(), "img")) {
                     item.setAttribute("title", childElem.getAttribute("alt"));
                 }
 
-
-                if (hasClassMatch(childElem, inputsJson, "multiple")) {
-                    String urlNew = inputsJson.get("website") + childElem.getAttribute("href");
-                    item.setAttribute("url", urlNew);
-
-                }
 
             }
             products.add(item);
@@ -86,9 +83,13 @@ public class SiteScraper {
     private static List<HtmlElement> getElements(HtmlPage page, JSONObject inputsJson) {
         List<HtmlElement> elements = new ArrayList<HtmlElement>();
         for (HtmlElement elem : page.getHtmlElementDescendants()) {
-            String elemClass = elem.getAttribute("class");
-            if (elemClass.contains(inputsJson.get("xPathPart").toString())) {
+            String elemClass = elem.getAttribute("data-asin");
+//            if (!elemClass.isEmpty()) {System.out.println(elemClass);}
+            if (!elemClass.isEmpty()) {
+//                System.out.println(elemClass);
                 elements.add(elem);
+            } else {
+//                System.out.println("empty");
             }
         }
         System.out.println(elements.size() + " root elements");

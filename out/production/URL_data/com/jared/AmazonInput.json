@@ -1,24 +1,21 @@
 {
   "website" : "www.amazon.com",
-  "url" : "https://www.amazon.com/Best-Sellers-Amazon-Devices-Accessories-Amazon-Devices/zgbs/amazon-devices/2102313011/ref=zg_bs_nav_amazon-devices_1",
-
-  "image" : "a-dynamic-image",
-  "title" : "a-dynamic-image",
-  "price" : "a-size-base a-color-price",
-  "authorLink" : "a-size-small a-link-child",
-  "authorNoLink" : "a-size-small a-color-base",
-  "multiple" : "a-link-normal",
-  "rating5Star" : "a-icon-alt",
-  "amzId" : "data-asin",
-
-  "xPath" : "zg-carousel-general-faceout",
-  "xPathPart" : "general-faceout",
-  "rootIdOrName" : "gridItemRoot",
-
+  "SearchURL" : "https://www.amazon.com/s?k=usb+cable&crid=1U729EQM187Z6&sprefix=usb+cable%2Caps%2C100&ref=nb_sb_noss",
   "fileName" : "output.json",
   "folderName" : ".\\data",
 
-  "requiredKeys" : ["title", "price"]
+  "image" : "image",
+  "title" : "a-size-medium a-color-base a-text-normal",
+
+  "priceWhole" : "a-price-whole",
+  "priceFraction" : "a-price-fraction",
+  "priceSymbol" : "a-price-symbol",
+  "url" : "a-link-normal",
+  "rating5Star" : "a-icon-alt",
+  "amzId" : "data-asin",
+
+
+  "requiredKeys" : ["title", "url", "priceWhole", "priceFraction", "priceSymbol"]
 
 
 }
