@@ -1,21 +1,62 @@
-{
-  "website" : "www.amazon.com",
-  "SearchURL" : "https://www.amazon.com/s?k=usb+cable&crid=1U729EQM187Z6&sprefix=usb+cable%2Caps%2C100&ref=nb_sb_noss",
-  "fileName" : "output.json",
-  "folderName" : ".\\data",
-
-  "image" : "image",
-  "title" : "a-size-medium a-color-base a-text-normal",
-
-  "priceWhole" : "a-price-whole",
-  "priceFraction" : "a-price-fraction",
-  "priceSymbol" : "a-price-symbol",
-  "url" : "a-link-normal",
-  "rating5Star" : "a-icon-alt",
-  "amzId" : "data-asin",
-
-
-  "requiredKeys" : ["title", "url", "priceWhole", "priceFraction", "priceSymbol"]
-
-
-}
+[
+  {
+    "name": "amzId",
+    "rootLevel": true,
+    "required": true,
+    "searchType": "Attribute",
+    "searchString": "data-asin",
+    "pull": "Attribute"
+  },
+  {
+    "name": "priceWhole",
+    "required": true,
+    "searchType": "class",
+    "searchString": "a-price-whole",
+    "pull": "asText"
+  },
+  {
+    "name": "priceSymbol",
+    "required": true,
+    "searchType": "class",
+    "searchString": "a-price-symbol",
+    "pull": "asText"
+  },
+  {
+    "name": "priceFraction",
+    "required": true,
+    "searchType": "class",
+    "searchString": "a-price-fraction",
+    "pull": "asText"
+  },
+  {
+    "name": "rating5Star",
+    "required": false,
+    "searchType": "class",
+    "searchString": "a-icon-alt",
+    "pull": "asText"
+  },
+  {
+    "name": "image",
+    "required": false,
+    "searchType": "QualifiedName",
+    "searchString": "image",
+    "searchAttribute": "src",
+    "pull": "Attribute"
+  },
+  {
+    "name": "title",
+    "required": false,
+    "searchType": "QualifiedName",
+    "searchString": "image",
+    "searchAttribute": "alt",
+    "pull": "Attribute"
+  },
+  {
+    "name": "url",
+    "required": true,
+    "searchType": "class",
+    "searchString": "a-link-normal",
+    "searchAttribute": "href",
+    "pull": "Attribute"
+  }
+]

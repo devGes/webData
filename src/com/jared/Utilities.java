@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,13 +109,13 @@ public class Utilities {
      * @param data_keys
      * @return
      */
-    public static boolean isMatchAllRequiredKeys(JSONArray requiredKeys, Item data_keys) {
+    public static boolean isMatchAllRequiredKeys(List<String> requiredKeys, Item data_keys) {
 //        System.out.println("requiredKeys: " + requiredKeys.toString());
 //        System.out.println("keySet: " + data_keys.getSet().toString());
 
-        for (Object requiredKey : requiredKeys) {
+        for (String requiredKey : requiredKeys) {
 //            System.out.println("here: " + requiredKey.toString());
-            if (!data_keys.hasKey(requiredKey.toString())) {
+            if (!data_keys.hasKey(requiredKey)) {
 //                System.out.println("dnu");
                 return false;
             }
@@ -123,18 +124,18 @@ public class Utilities {
 
     }
 
-    /** Converts List of Item's to JSONArray
+    /**
      *
      * @param scrapedData
-     * @param inputsJson
+     * @param fileSettings
+     * @param requiredKeys
      * @return
      */
-    public static JSONArray itemListToJson (List<Item> scrapedData, JSONObject inputsJson) {
+    public static JSONArray itemListToJson (List<Item> scrapedData, JSONObject fileSettings, List<String> requiredKeys) {
         // Combines all scraped data into JSONArray (jsonArray or .Blank/Partial)
         JSONArray jsonArray = new JSONArray();
         JSONArray jsonArrayBlank = new JSONArray();
         JSONArray jsonArrayPartial = new JSONArray();
-        JSONArray requiredKeys = (JSONArray) inputsJson.get("requiredKeys");
 
         // filters each item on keys (# and required)
         for (Item item : scrapedData) {
@@ -155,10 +156,42 @@ public class Utilities {
         if (!jsonArrayPartial.isEmpty()) {
             Utilities.writeToFile(
                     jsonArrayPartial,
-                    "partial" + inputsJson.get("fileName").toString(),
-                    inputsJson.get("folderName").toString());
+                    "partial" + fileSettings.get("fileName").toString(),
+                    fileSettings.get("folderName").toString());
         }
         return jsonArray;
     }
 
-}
+    /**
+     *
+     * @param inputsJson
+     * @return
+     */
+    public static ArrayList<String> getRequiredKeys(JSONArray inputsJson) {
+        ArrayList<String> requiredKeys = new ArrayList<>();
+        for (Object obj : inputsJson) {
+            JSONObject jobj = (JSONObject) obj;
+            if (jobj.get("required")  == "True") {
+                requiredKeys.add(jobj.toString());
+            }
+        }
+        return requiredKeys;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static ArrayList<String> extractAmzIdFromUrlJson() {
+        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\AmazonProductURLs.json");
+        ArrayList<String> urlInputs = new ArrayList<>();
+
+        for (Object X : inputsJson) {
+            urlInputs.add(extractAmzIdFromUrl(X.toString()));
+            System.out.println(extractAmzIdFromUrl(X.toString()));
+        }
+        return urlInputs;
+    }
+
+
+    }

@@ -25,6 +25,7 @@ public class Item {
     }
 
     public void setAttribute(String key, String val) {
+        if (val.isEmpty()) {System.out.printf("Writing empty value. Key=%s%n", key);}
         this.dict.put(key, val);
     }
 

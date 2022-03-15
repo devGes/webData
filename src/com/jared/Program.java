@@ -3,7 +3,6 @@ package com.jared;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.jared.SiteScraper.scrapeSite;
@@ -14,40 +13,33 @@ public class Program {
 
     public static void main(String[] args) {
         extractGroupedPages();
-//        extractIndividualPages();
     }
 
     public static void extractGroupedPages() {
         // Loads JSON input values
-        JSONObject inputsJson = objectFromJson(".\\src\\com\\jared\\AmazonInput.json");
+        JSONObject searchSettings = objectFromJson(".\\src\\com\\jared\\SearchInput.json");
+        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
 
         // Collects data from site (using inputsJson)
-        List<Item> scrapedData    = scrapeSite(inputsJson);
+        List<Item> scrapedData    = scrapeSite(inputsJson, searchSettings);
 
         // Converts data to JSONArray
-        JSONArray scrapedDataJson = itemListToJson(scrapedData, inputsJson);
+        JSONArray scrapedDataJson = itemListToJson(
+                scrapedData,
+                searchSettings,
+                getRequiredKeys(inputsJson));
 
         // writes JSONArray of scraped data to file
         Utilities.writeToFile(
                 scrapedDataJson,
-                inputsJson.get("fileName").toString(),
-                inputsJson.get("folderName").toString());
+                searchSettings.get("fileName").toString(),
+                searchSettings.get("folderName").toString());
 
     }
 
-    public static ArrayList<String> extractIndividualPages() {
-        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\AmazonProductURLs.json");
-        ArrayList<String> urlInputs = new ArrayList<>();
-
-        for (Object X : inputsJson) {
-            urlInputs.add(extractAmzIdFromUrl(X.toString()));
-            System.out.println(extractAmzIdFromUrl(X.toString()));
-        }
-        return urlInputs;
 
 
 
 
-    }
 
 }
