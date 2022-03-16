@@ -18,16 +18,16 @@ public class Program {
     public static void extractGroupedPages() {
         // Loads JSON input values
         JSONObject searchSettings = objectFromJson(".\\src\\com\\jared\\AmazonSiteInput.json");
-        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
+        JSONArray itemInputs = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
 
-        // Collects data from site (using inputsJson)
-        List<Item> scrapedData    = scrapeSite(inputsJson, searchSettings);
+        // Collects data from site (using itemInputs)
+        List<Item> scrapedData    = scrapeSite(itemInputs, searchSettings);
 
         // Converts data to JSONArray
         JSONArray scrapedDataJson = itemListToJson(
                 scrapedData,
                 searchSettings,
-                getRequiredKeys(inputsJson));
+                getRequiredKeys(itemInputs));
 
         // writes JSONArray of scraped data to file
         Utilities.writeToFile(

@@ -92,9 +92,25 @@ public class Utilities {
      * @return
      */
     public static String extractAmzIdFromUrl(String url) {
-        String searchPattern = "(?<=/)([a-zA-Z0-9]{10,13})(?=[/\"?]|$)";
+        String searchPattern = "(?<=/)([a-zA-Z0-9]{10,13})(?=[^]|$)";
         Pattern pattern = Pattern.compile(searchPattern);
         Matcher matcher = pattern.matcher(url);
+        boolean matchFound = matcher.find();
+        if(matchFound) {
+            return matcher.group();
+        } else {
+            return "";
+        }
+    }
+    /** Uses Regex to extract the Amazon product ID from a HTML String
+     *
+     * @param url
+     * @return
+     */
+    public static String extractAmzIdFromHTML(String htmlString) {
+        String searchPattern = "(?<=asin=)([a-zA-Z0-9]{10,13})(?=[^a-zA-Z0-9])";
+        Pattern pattern = Pattern.compile(searchPattern);
+        Matcher matcher = pattern.matcher(htmlString);
         boolean matchFound = matcher.find();
         if(matchFound) {
             return matcher.group();
@@ -139,6 +155,7 @@ public class Utilities {
 
         // filters each item on keys (# and required)
         for (Item item : scrapedData) {
+//            System.out.println(item.getSet());
             if (item.size() == 0) {
                 jsonArrayBlank.add( item.HashMaptoJSON());
             } else if(isMatchAllRequiredKeys( requiredKeys, item )) {
@@ -150,7 +167,7 @@ public class Utilities {
 
         System.out.printf("%d empty items.%n",       jsonArrayBlank.size());
         System.out.printf("%d partial items.%n",     jsonArrayPartial.size());
-        System.out.printf("%d filled items. (%s)%n", jsonArray.size(), requiredKeys);
+        System.out.printf("%d filled items. %s%n", jsonArray.size(), requiredKeys);
 
 //         Main file (jsonArray) is written elsewhere (Program.java), this is for debugging.
         if (!jsonArrayPartial.isEmpty()) {
@@ -171,8 +188,8 @@ public class Utilities {
         ArrayList<String> requiredKeys = new ArrayList<>();
         for (Object obj : inputsJson) {
             JSONObject jobj = (JSONObject) obj;
-            if (jobj.get("required")  == "True") {
-                requiredKeys.add(jobj.toString());
+            if ((boolean) jobj.get("required")) {
+                requiredKeys.add(jobj.get("name").toString());
             }
         }
         return requiredKeys;
@@ -193,5 +210,9 @@ public class Utilities {
         return urlInputs;
     }
 
+
+    public static String stringToAmzSearch (String searchInput) {
+        return "https://www.amazon.com/s?k=" + searchInput.replace(" ", "+").replace("'", "%27").replace("/","%2F");
+    }
 
     }

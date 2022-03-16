@@ -49,13 +49,5 @@
     "searchString": "image",
     "searchAttribute": "alt",
     "pull": "Attribute"
-  },
-  {
-    "name": "url",
-    "required": true,
-    "searchType": "class",
-    "searchString": "a-link-normal",
-    "searchAttribute": "href",
-    "pull": "Attribute"
   }
 ]

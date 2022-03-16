@@ -14,107 +14,37 @@ import java.util.Objects;
 
 public class SiteScraper {
 
-    /**
-     * @param inputsJson
-     * @return
-     */
-    public static List<Item> scrapeSite(JSONArray inputsJson, JSONObject searchSettings) {
+
+    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings) {
 
         WebClient web = new WebClient();
         web.setJavaScriptEnabled(false);
 //        web.setCssEnabled(false);
 
         HtmlPage page = getPage(web, searchSettings.get("SearchURL").toString());
-
-
-        List<Item> products = new ArrayList<>();
-        JSONObject currentInput = new JSONObject();
-        Item item;
+        assert page != null;
 
         List<HtmlElement> elements = getRootElements(page, searchSettings);
 
-
-        for (HtmlElement elem : elements) {
-            item = new Item();
-
-            item.setAttribute("amzID", elem.getAttribute((String) currentInput.get("amzId")));
-
-            for (HtmlElement childElem : elem.getHtmlElementDescendants()) {
-
-                if (childElem.getAttribute("class").equals(currentInput.get("priceWhole"))) {
-                    item.setAttribute("priceWhole", childElem.asText());
-                }
-
-                if (childElem.getAttribute("class").equals(currentInput.get("priceSymbol"))) {
-                    item.setAttribute("priceSymbol", childElem.asText());
-                }
-
-                if (childElem.getAttribute("class").equals(currentInput.get("priceFraction"))) {
-                    item.setAttribute("priceFraction", childElem.asText());
-                }
-
-                if (childElem.getAttribute("class").equals(currentInput.get("rating5Star"))) {
-                    item.setAttribute("rating5Star", childElem.asText());
-                }
-
-                if (childElem.getAttribute("class").equals(currentInput.get("url"))) {
-                    String urlNew = searchSettings.get("website") + childElem.getAttribute("href");
-                    item.setAttribute("url", urlNew);
-                }
+        return getProductList(elements, itemInputs);
 
 
-                if (Objects.equals(childElem.getQualifiedName().toString(), "img")) {
-                    item.setAttribute("image", childElem.getAttribute("src"));
-                }
-
-                if (Objects.equals(childElem.getQualifiedName().toString(), "img")) {
-                    item.setAttribute("title", childElem.getAttribute("alt"));
-                }
-
-
-            }
-            products.add(item);
-        }
-
-
-
-        return products;
     }
 
-    private static boolean isRootLevel(JSONObject currentInput) {
-        if (currentInput.containsKey("rootLevel")) {
-                return ((boolean) currentInput.get("rootLevel"));
-            }
-        return false;
-    }
-
-    private static void setAttributeByJson(Item item, JSONObject currentInput) {
-        //
-    }
-
-    private static List<HtmlElement> getRootElements(HtmlPage page, JSONObject searchSettings) {
+    public static List<HtmlElement> getRootElements(HtmlPage page, JSONObject searchSettings) {
         List<HtmlElement> elements = new ArrayList<HtmlElement>();
         String elemClass = "";
         boolean searchType;
 
         for (HtmlElement elem : page.getHtmlElementDescendants()) {
 
-            if (Objects.equals(searchSettings.get("searchType").toString(), "Attribute")) {
-                System.out.println("Attribute: " + searchSettings.get("searchType"));
+            if ( (Objects.equals(searchSettings.get("searchType").toString(), "Attribute")) || (Objects.equals(searchSettings.get("searchType").toString(), "class"))) {
                 if(Objects.equals(searchSettings.get("pull").toString(), "asText")) {
                     elemClass = elem.asText();
-                } else if (Objects.equals(searchSettings.get("pull").toString(), "Attribute")) {
-                    elemClass = elem.getAttribute(searchSettings.get("searchString").toString());
-                }
-            } else if (Objects.equals(searchSettings.get("searchType").toString(), "class")) {
-                System.out.println("class: " + searchSettings.get("searchType"));
-                if(Objects.equals(searchSettings.get("pull").toString(), "asText")) {
-                    elemClass = elem.asText();
-                } else if (Objects.equals(searchSettings.get("pull").toString(), "Attribute")) {
+                } else if (Objects.equals(searchSettings.get("pull").toString(), searchSettings.get("searchType").toString())) {
                     elemClass = elem.getAttribute(searchSettings.get("searchString").toString());
                 }
             }
-
 
             if (!elemClass.isEmpty()) {
                 elements.add(elem);
@@ -126,6 +56,51 @@ public class SiteScraper {
         System.out.println(elements.size() + " root elements");
         return elements;
     }
+
+    public static void setAttributeByJson(Item item, JSONObject currentInput, HtmlElement childElem) {
+        boolean isFound = false;
+//        System.out.println(currentInput.get("searchType").toString());
+        if (    (Objects.equals(currentInput.get("searchType").toString(), "Attribute"))
+                || (Objects.equals(currentInput.get("searchType").toString(), "class"))) {
+            isFound = (childElem.getAttribute(currentInput.get("searchType").toString()).equals(currentInput.get("searchString").toString()));
+        } else if (currentInput.get("searchType") == "QualifiedName") {
+            isFound = Objects.equals(childElem.getQualifiedName().toString(), currentInput.get("searchAttribute").toString());
+        }
+
+
+        if (isFound) {
+            if (currentInput.get("pull") == "Attribute") {
+                item.setAttribute(currentInput.get("name").toString(), childElem.getAttribute(currentInput.get("searchAttribute").toString()));
+            } else if (Objects.equals(currentInput.get("pull").toString(), "asText")) {
+                item.setAttribute(currentInput.get("name").toString(), childElem.asText());
+            }
+        }
+    }
+
+    private static List<Item> getProductList(List<HtmlElement> elements, JSONArray itemInputs) {
+        List<Item> products = new ArrayList<>();
+        Item item;
+        for (HtmlElement elem : elements) {
+            item = new Item();
+
+//            item.setAttribute("amzId", elem.getAttribute((String) searchSettings.get("searchString")));
+
+            for (HtmlElement childElem : elem.getHtmlElementDescendants()) {
+
+                for (Object currentInput :  itemInputs) {
+                    setAttributeByJson( item, (JSONObject) currentInput, childElem);
+                }
+
+            }
+            products.add(item);
+        }
+
+
+
+        return products;
+    }
+
+
 
     /**
      * @param elementClasses
