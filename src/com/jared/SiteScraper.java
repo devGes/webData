@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.w3c.dom.html.HTMLObjectElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ import java.util.Objects;
 public class SiteScraper {
 
 
-    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings) {
+    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings, String websiteUrl) {
 
         WebClient web = new WebClient();
         web.setJavaScriptEnabled(false);
 //        web.setCssEnabled(false);
 
-        HtmlPage page = getPage(web, searchSettings.get("SearchURL").toString());
+        HtmlPage page = getPage(web, websiteUrl);
         assert page != null;
 
         List<HtmlElement> elements = getRootElements(page, searchSettings);
@@ -57,19 +58,23 @@ public class SiteScraper {
         return elements;
     }
 
+    public static boolean isEqual(JSONObject currentInput, String searchJSON, String string) {
+        return (Objects.equals(currentInput.get(searchJSON).toString(), string));
+    }
+
     public static void setAttributeByJson(Item item, JSONObject currentInput, HtmlElement childElem) {
         boolean isFound = false;
-//        System.out.println(currentInput.get("searchType").toString());
-        if (    (Objects.equals(currentInput.get("searchType").toString(), "Attribute"))
-                || (Objects.equals(currentInput.get("searchType").toString(), "class"))) {
-            isFound = (childElem.getAttribute(currentInput.get("searchType").toString()).equals(currentInput.get("searchString").toString()));
-        } else if (currentInput.get("searchType") == "QualifiedName") {
-            isFound = Objects.equals(childElem.getQualifiedName().toString(), currentInput.get("searchAttribute").toString());
+
+        if (isEqual(currentInput, "searchType", "class")) {
+            isFound = isEqual(currentInput, "searchString", childElem.getAttribute(currentInput.get("searchType").toString()));
+        } else if (isEqual(currentInput, "searchType", "Attribute")) {
+            isFound = ( childElem.getAttribute(currentInput.get("searchString").toString()).length() != 0 );
+        }   else if (isEqual(currentInput, "searchType", "QualifiedName")) {
+            isFound = isEqual(currentInput, "searchString", childElem.getQualifiedName().toString());
         }
 
-
         if (isFound) {
-            if (currentInput.get("pull") == "Attribute") {
+            if (Objects.equals(currentInput.get("pull").toString(), "Attribute")) {
                 item.setAttribute(currentInput.get("name").toString(), childElem.getAttribute(currentInput.get("searchAttribute").toString()));
             } else if (Objects.equals(currentInput.get("pull").toString(), "asText")) {
                 item.setAttribute(currentInput.get("name").toString(), childElem.asText());
@@ -80,23 +85,29 @@ public class SiteScraper {
     private static List<Item> getProductList(List<HtmlElement> elements, JSONArray itemInputs) {
         List<Item> products = new ArrayList<>();
         Item item;
+
         for (HtmlElement elem : elements) {
             item = new Item();
 
 //            item.setAttribute("amzId", elem.getAttribute((String) searchSettings.get("searchString")));
-
-            for (HtmlElement childElem : elem.getHtmlElementDescendants()) {
-
-                for (Object currentInput :  itemInputs) {
-                    setAttributeByJson( item, (JSONObject) currentInput, childElem);
+            for (Object currentInput0 :  itemInputs) {
+                JSONObject currentInput = (JSONObject) currentInput0;
+                if (isRootLevel(currentInput)) {
+//                    System.out.println("isRootLevel: " + currentInput.get("name"));
+//                    System.out.println("searchType: " + currentInput.get("searchType").toString());
+//                    System.out.println("elem: " + elem.getAttribute("data-asin"));
+                    setAttributeByJson(item, currentInput, elem);
+                } else {
+                    for (HtmlElement childElem : elem.getHtmlElementDescendants()) {
+                        if (! isRootLevel(currentInput)) {
+                            setAttributeByJson( item, currentInput, childElem);
+                        }
+                    }
                 }
-
             }
             products.add(item);
+
         }
-
-
-
         return products;
     }
 
@@ -154,5 +165,11 @@ public class SiteScraper {
         }
     }
 
+    private static boolean isRootLevel(JSONObject currentInput) {
+        if (currentInput.containsKey("rootLevel")) {
+            return ((boolean) currentInput.get("rootLevel"));
+        }
+        return false;
+    }
 
 }

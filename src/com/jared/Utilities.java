@@ -86,7 +86,7 @@ public class Utilities {
         return new JSONArray();
     }
 
-    /** Uses Regex to extract the Amazon product ID from a URL
+    /** Uses Regex to extract the Amazon product ID from a URL (has issues)
      *
      * @param url
      * @return
@@ -102,9 +102,10 @@ public class Utilities {
             return "";
         }
     }
-    /** Uses Regex to extract the Amazon product ID from a HTML String
+
+    /** Uses Regex to extract the Amazon product ID from an HTML String
      *
-     * @param url
+     * @param htmlString
      * @return
      */
     public static String extractAmzIdFromHTML(String htmlString) {
@@ -140,7 +141,7 @@ public class Utilities {
 
     }
 
-    /**
+    /** Creates JSON from list of Item's (also filters based on requiredKey values
      *
      * @param scrapedData
      * @param fileSettings
@@ -179,7 +180,7 @@ public class Utilities {
         return jsonArray;
     }
 
-    /**
+    /** Extracts list of requiredKeys from inputsJson
      *
      * @param inputsJson
      * @return
@@ -199,8 +200,8 @@ public class Utilities {
      *
      * @return
      */
-    public static ArrayList<String> extractAmzIdFromUrlJson() {
-        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\AmazonProductURLs.json");
+    public static ArrayList<String> extractAmzIdFromUrlJson(String fileName) {
+        JSONArray inputsJson = arrayFromJson(fileName);
         ArrayList<String> urlInputs = new ArrayList<>();
 
         for (Object X : inputsJson) {
@@ -208,6 +209,10 @@ public class Utilities {
             System.out.println(extractAmzIdFromUrl(X.toString()));
         }
         return urlInputs;
+    }
+
+    public static ArrayList<String> extractAmzIdFromUrlJson () {
+        return extractAmzIdFromUrlJson(".\\src\\com\\jared\\AmazonProductURLs.json");
     }
 
 

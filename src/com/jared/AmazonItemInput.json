@@ -2,8 +2,10 @@
   {
     "name": "amzId",
     "required": true,
+    "rootLevel": true,
     "searchType": "Attribute",
     "searchString": "data-asin",
+    "searchAttribute": "data-asin",
     "pull": "Attribute"
   },
   {
@@ -38,16 +40,16 @@
     "name": "image",
     "required": false,
     "searchType": "QualifiedName",
-    "searchString": "image",
-    "searchAttribute": "src",
-    "pull": "Attribute"
+    "searchString": "img",
+    "pull": "Attribute",
+    "searchAttribute": "src"
   },
   {
     "name": "title",
-    "required": false,
+    "required": true,
     "searchType": "QualifiedName",
-    "searchString": "image",
-    "searchAttribute": "alt",
-    "pull": "Attribute"
+    "searchString": "img",
+    "pull": "Attribute",
+    "searchAttribute": "alt"
   }
 ]
