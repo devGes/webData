@@ -1,7 +1,6 @@
 [
   {
     "name": "amzId",
-    "rootLevel": true,
     "required": true,
     "searchType": "Attribute",
     "searchString": "data-asin",

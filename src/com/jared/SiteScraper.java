@@ -28,12 +28,10 @@ public class SiteScraper {
 
 
         List<Item> products = new ArrayList<>();
-        List<HtmlElement> elements = new ArrayList<HtmlElement>();
         JSONObject currentInput = new JSONObject();
         Item item;
 
-        elements = getElementsByAttribute(page, inputsJson);
-
+        List<HtmlElement> elements = getRootElements(page, searchSettings);
 
 
         for (HtmlElement elem : elements) {
@@ -94,25 +92,34 @@ public class SiteScraper {
         //
     }
 
-    private static List<HtmlElement> getElementsByAttribute(HtmlPage page, JSONArray currentInputs) {
+    private static List<HtmlElement> getRootElements(HtmlPage page, JSONObject searchSettings) {
         List<HtmlElement> elements = new ArrayList<HtmlElement>();
         String elemClass = "";
+        boolean searchType;
 
         for (HtmlElement elem : page.getHtmlElementDescendants()) {
-            for (Object currentInputO : currentInputs) {
-                JSONObject currentInput = (JSONObject) currentInputO;
-                if (isRootLevel(currentInput)) {
-                    if (Objects.equals(currentInput.get("searchType").toString(), "Attribute")) {
-                        elemClass = elem.getAttribute(currentInput.get("searchString").toString());
-                    } else if (Objects.equals(currentInput.get("searchType").toString(), "class")) {
-                        elemClass = elem.asText();
-                    }
 
-                    if (!elemClass.isEmpty()) {
-                        elements.add(elem);
-                    }
+            if (Objects.equals(searchSettings.get("searchType").toString(), "Attribute")) {
+                System.out.println("Attribute: " + searchSettings.get("searchType"));
+                if(Objects.equals(searchSettings.get("pull").toString(), "asText")) {
+                    elemClass = elem.asText();
+                } else if (Objects.equals(searchSettings.get("pull").toString(), "Attribute")) {
+                    elemClass = elem.getAttribute(searchSettings.get("searchString").toString());
+                }
+            } else if (Objects.equals(searchSettings.get("searchType").toString(), "class")) {
+                System.out.println("class: " + searchSettings.get("searchType"));
+                if(Objects.equals(searchSettings.get("pull").toString(), "asText")) {
+                    elemClass = elem.asText();
+                } else if (Objects.equals(searchSettings.get("pull").toString(), "Attribute")) {
+                    elemClass = elem.getAttribute(searchSettings.get("searchString").toString());
                 }
             }
+
+
+            if (!elemClass.isEmpty()) {
+                elements.add(elem);
+            }
+
         }
 
 

@@ -17,7 +17,7 @@ public class Program {
 
     public static void extractGroupedPages() {
         // Loads JSON input values
-        JSONObject searchSettings = objectFromJson(".\\src\\com\\jared\\SearchInput.json");
+        JSONObject searchSettings = objectFromJson(".\\src\\com\\jared\\AmazonSiteInput.json");
         JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
 
         // Collects data from site (using inputsJson)
