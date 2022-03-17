@@ -1,5 +1,5 @@
 {
-  "inputType" : "AmazonItemInput.json",
+  "inputJSON" : "AmazonItemInput.json",
   "website" : "https://www.amazon.com",
   "numOfNextPages" : 2,
 
@@ -13,5 +13,5 @@
 
   "nextSearchType": "Attribute",
   "nextSearchString" : "aria-label",
-  "nextsearchAttribute" : "next page",
+  "nextsearchAttribute" : "next page"
 }

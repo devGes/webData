@@ -5,8 +5,6 @@ G
 filename.txt,8\3\8349c9e2d3341940dc146d5f2fccb33697e62657
 <
 URL_data.iml,2\4\244c02268a7339dae3b0941d60851e957cb38771
-G
-src/com/jared/Item.java,7\5\75619f2d2b48bf9c86249a961f0719415bbadcda
 A
 data/testing.html,d\a\da4ba9fbe483a88f987d6e442192d1e670917169
 B

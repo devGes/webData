@@ -222,10 +222,19 @@ public class Utilities {
         return urlInputs;
     }
 
+    /**
+     *
+     * @return
+     */
     public static ArrayList<String> extractAmzIdFromUrlJson () {
         return extractAmzIdFromUrlJson(".\\src\\com\\jared\\AmazonProductURLs.json");
     }
 
+    /**
+     *
+     * @param searchInput
+     * @return
+     */
     public static String stringToAmzSearch (String searchInput) {
         return "https://www.amazon.com/s?k=" + searchInput.replace(" ", "+").replace("'", "%27").replace("/","%2F");
     }

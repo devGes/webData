@@ -25,7 +25,7 @@ public class SiteScraper {
                 searchSettings,
                 websiteUrl,
                 web,
-                0);
+                1);
     }
 
     public static List<Item> scrapeSite(

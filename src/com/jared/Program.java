@@ -14,19 +14,20 @@ public class Program {
 
     public static void main(String[] args) {
         extractGroupedPages();
+        //test
     }
 
 
     public static void extractGroupedPages () {
         extractGroupedPages(
                 ".\\src\\com\\jared\\AmazonSiteInput.json",
-                "https://www.amazon.com/s?k=usb+cables&page=1");
+                stringToAmzSearch("usb cables"));
     }
 
     public static void extractGroupedPages(String searchFileLocation, String websiteUrl) {
         // Loads JSON input values
         JSONObject searchSettings = objectFromJson(searchFileLocation);
-        JSONArray itemInputs = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
+        JSONArray itemInputs = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputJSON"));
 
         // Collects data from site (using itemInputs)
         WebClient web = getWebClient();
@@ -34,8 +35,7 @@ public class Program {
                 itemInputs,
                 searchSettings,
                 websiteUrl,
-                web,
-                0);
+                web);
 
         // Converts data to JSONArray
         JSONArray scrapedDataJson = itemListToJson(
