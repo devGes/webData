@@ -4,7 +4,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.w3c.dom.html.HTMLObjectElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,21 +14,58 @@ import java.util.Objects;
 
 public class SiteScraper {
 
+    public static List<Item> scrapeSite(
+            JSONArray itemInputs,
+            JSONObject searchSettings,
+            String websiteUrl,
+            WebClient web)
+    {
+        return scrapeSite(
+                itemInputs,
+                searchSettings,
+                websiteUrl,
+                web,
+                0);
+    }
 
-    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings, String websiteUrl) {
+    public static List<Item> scrapeSite(
+            JSONArray itemInputs,
+            JSONObject searchSettings,
+            String websiteUrl,
+            WebClient web,
+            long currentPageNum) {
 
-        WebClient web = new WebClient();
-        web.setJavaScriptEnabled(false);
+        System.out.println("currentPageNum: " + currentPageNum);
 //        web.setCssEnabled(false);
-
         HtmlPage page = getPage(web, websiteUrl);
         assert page != null;
 
         List<HtmlElement> elements = getRootElements(page, searchSettings);
 
-        return getProductList(elements, itemInputs);
+        List<Item> products = new ArrayList<Item>();
+        if (currentPageNum < Long.parseLong(searchSettings.get("numOfNextPages").toString())) {
+            products.addAll(scrapeSite(
+                                itemInputs,
+                                searchSettings,
+                                getNextPage(page, searchSettings),
+                                web,
+                                currentPageNum+1));
+        }
+        products.addAll(getProductList(elements, itemInputs));
+      return products;
+    }
 
 
+    public static String getNextPage(HtmlPage page, JSONObject searchSettings) {
+        for (HtmlElement elem : page.getHtmlElementDescendants()) {
+            if(isEqual(searchSettings, "nextSearchType", "Attribute")) {
+                if (elem.getAttribute("aria-label").contains( searchSettings.get("nextsearchAttribute").toString())) {
+                    return searchSettings.get("website").toString() +  elem.getAttribute("href").toString();
+                }
+            }
+        }
+        System.out.println("Error: getNextPage");
+        return "";
     }
 
     public static List<HtmlElement> getRootElements(HtmlPage page, JSONObject searchSettings) {

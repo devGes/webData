@@ -1,5 +1,6 @@
 package com.jared;
 
+import com.gargoylesoftware.htmlunit.WebClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -28,7 +29,13 @@ public class Program {
         JSONArray itemInputs = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));
 
         // Collects data from site (using itemInputs)
-        List<Item> scrapedData    = scrapeSite(itemInputs, searchSettings, websiteUrl);
+        WebClient web = getWebClient();
+        List<Item> scrapedData    = scrapeSite(
+                itemInputs,
+                searchSettings,
+                websiteUrl,
+                web,
+                0);
 
         // Converts data to JSONArray
         JSONArray scrapedDataJson = itemListToJson(

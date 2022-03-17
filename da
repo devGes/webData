@@ -1,0 +1,314 @@
+[33mcommit aaefde4ae018edcacb23af96609cc30171e4ad0e[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31mwebData/master[m[33m)[m
+Author: Jared Gesley <GesleyJ@gmail.com>
+Date:   Wed Mar 16 16:57:46 2022 -0400
+
+    A
+
+[1mdiff --git a/data/htmlTests.txt b/data/htmlTests.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..742bb05[m
+[1m--- /dev/null[m
+[1m+++ b/data/htmlTests.txt[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=2&crid=3SV8S61XMOK9W&qid=1647461507&sprefix=usb+cables%2Caps%2C109&ref=sr_pg_1[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=2&crid=3SV8S61XMOK9W&qid=1647461507&sprefix=usb+cables%2Caps%2C109&ref=sr_pg_2[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=3&crid=3SV8S61XMOK9W&qid=1647461507&sprefix=usb+cables%2Caps%2C109&ref=sr_pg_3[m
+[32m+[m
+[32m+[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=1[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=2[m
+[32m+[m[32mhttps://www.amazon.com/s?k=usb+cables&page=3[m
+\ No newline at end of file[m
+[1mdiff --git a/src/com/jared/AmazonItemInput.json b/src/com/jared/AmazonItemInput.json[m
+[1mindex 209c7b7..e61cb41 100644[m
+[1m--- a/src/com/jared/AmazonItemInput.json[m
+[1m+++ b/src/com/jared/AmazonItemInput.json[m
+[36m@@ -2,8 +2,10 @@[m
+   {[m
+     "name": "amzId",[m
+     "required": true,[m
+[32m+[m[32m    "rootLevel": true,[m
+     "searchType": "Attribute",[m
+     "searchString": "data-asin",[m
+[32m+[m[32m    "searchAttribute": "data-asin",[m
+     "pull": "Attribute"[m
+   },[m
+   {[m
+[36m@@ -38,16 +40,16 @@[m
+     "name": "image",[m
+     "required": false,[m
+     "searchType": "QualifiedName",[m
+[31m-    "searchString": "image",[m
+[31m-    "searchAttribute": "src",[m
+[31m-    "pull": "Attribute"[m
+[32m+[m[32m    "searchString": "img",[m
+[32m+[m[32m    "pull": "Attribute",[m
+[32m+[m[32m    "searchAttribute": "src"[m
+   },[m
+   {[m
+     "name": "title",[m
+[31m-    "required": false,[m
+[32m+[m[32m    "required": true,[m
+     "searchType": "QualifiedName",[m
+[31m-    "searchString": "image",[m
+[31m-    "searchAttribute": "alt",[m
+[31m-    "pull": "Attribute"[m
+[32m+[m[32m    "searchString": "img",[m
+[32m+[m[32m    "pull": "Attribute",[m
+[32m+[m[32m    "searchAttribute": "alt"[m
+   }[m
+ ][m
+[1mdiff --git a/src/com/jared/AmazonSiteInput.json b/src/com/jared/AmazonSiteInput.json[m
+[1mindex d2ddb28..279e2b1 100644[m
+[1m--- a/src/com/jared/AmazonSiteInput.json[m
+[1m+++ b/src/com/jared/AmazonSiteInput.json[m
+[36m@@ -1,6 +1,4 @@[m
+ {[m
+[31m-  "SearchURL" : "https://www.amazon.com/s?k=usb+cable&crid=1U729EQM187Z6&sprefix=usb+cable%2Caps%2C100&ref=nb_sb_noss",[m
+[31m-[m
+   "inputType" : "AmazonItemInput.json",[m
+   "website" : "www.amazon.com",[m
+ [m
+[1mdiff --git a/src/com/jared/Item.java b/src/com/jared/Item.java[m
+[1mindex d61f7d3..0a28650 100644[m
+[1m--- a/src/com/jared/Item.java[m
+[1m+++ b/src/com/jared/Item.java[m
+[36m@@ -25,8 +25,13 @@[m [mpublic class Item {[m
+     }[m
+ [m
+     public void setAttribute(String key, String val) {[m
+[31m-        if (val.isEmpty()) {System.out.printf("Writing empty value. Key=%s%n", key);}[m
+[31m-        this.dict.put(key, val);[m
+[32m+[m[32m        assert val!=null;[m
+[32m+[m[32m        if (val.isEmpty() || val.isBlank()){[m
+[32m+[m[32m//            System.out.printf("Trying to write empty value. Key=%s%n", key);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else {[m
+[32m+[m[32m            this.dict.put(key, val);[m
+[32m+[m[32m        }[m
+     }[m
+ [m
+     public JSONObject HashMaptoJSON() {[m
+[1mdiff --git a/src/com/jared/Program.java b/src/com/jared/Program.java[m
+[1mindex 5090ad1..c98d4e2 100644[m
+[1m--- a/src/com/jared/Program.java[m
+[1m+++ b/src/com/jared/Program.java[m
+[36m@@ -15,13 +15,20 @@[m [mpublic class Program {[m
+         extractGroupedPages();[m
+     }[m
+ [m
+[31m-    public static void extractGroupedPages() {[m
+[32m+[m
+[32m+[m[32m    public static void extractGroupedPages () {[m
+[32m+[m[32m        extractGroupedPages([m
+[32m+[m[32m                ".\\src\\com\\jared\\AmazonSiteInput.json",[m
+[32m+[m[32m                "https://www.amazon.com/s?k=usb+cables&page=1");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public static void extractGroupedPages(String searchFileLocation, String websiteUrl) {[m
+         // Loads JSON input values[m
+[31m-        JSONObject searchSettings = objectFromJson(".\\src\\com\\jared\\AmazonSiteInput.json");[m
+[32m+[m[32m        JSONObject searchSettings = objectFromJson(searchFileLocation);[m
+         JSONArray itemInputs = arrayFromJson(".\\src\\com\\jared\\" + searchSettings.get("inputType"));[m
+ [m
+         // Collects data from site (using itemInputs)[m
+[31m-        List<Item> scrapedData    = scrapeSite(itemInputs, searchSettings);[m
+[32m+[m[32m        List<Item> scrapedData    = scrapeSite(itemInputs, searchSettings, websiteUrl);[m
+ [m
+         // Converts data to JSONArray[m
+         JSONArray scrapedDataJson = itemListToJson([m
+[36m@@ -30,16 +37,10 @@[m [mpublic class Program {[m
+                 getRequiredKeys(itemInputs));[m
+ [m
+         // writes JSONArray of scraped data to file[m
+[31m-        Utilities.writeToFile([m
+[32m+[m[32m        writeToFile([m
+                 scrapedDataJson,[m
+                 searchSettings.get("fileName").toString(),[m
+                 searchSettings.get("folderName").toString());[m
+ [m
+     }[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+ }[m
+[1mdiff --git a/src/com/jared/SiteScraper.java b/src/com/jared/SiteScraper.java[m
+[1mindex 3a101f9..5bb9a78 100644[m
+[1m--- a/src/com/jared/SiteScraper.java[m
+[1m+++ b/src/com/jared/SiteScraper.java[m
+[36m@@ -4,6 +4,7 @@[m [mimport com.gargoylesoftware.htmlunit.WebClient;[m
+ import com.gargoylesoftware.htmlunit.html.*;[m
+ import org.json.simple.JSONArray;[m
+ import org.json.simple.JSONObject;[m
+[32m+[m[32mimport org.w3c.dom.html.HTMLObjectElement;[m
+ [m
+ import java.io.IOException;[m
+ import java.util.ArrayList;[m
+[36m@@ -15,13 +16,13 @@[m [mimport java.util.Objects;[m
+ public class SiteScraper {[m
+ [m
+ [m
+[31m-    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings) {[m
+[32m+[m[32m    public static List<Item> scrapeSite(JSONArray itemInputs, JSONObject searchSettings, String websiteUrl) {[m
+ [m
+         WebClient web = new WebClient();[m
+         web.setJavaScriptEnabled(false);[m
+ //        web.setCssEnabled(false);[m
+ [m
+[31m-        HtmlPage page = getPage(web, searchSettings.get("SearchURL").toString());[m
+[32m+[m[32m        HtmlPage page = getPage(web, websiteUrl);[m
+         assert page != null;[m
+ [m
+         List<HtmlElement> elements = getRootElements(page, searchSettings);[m
+[36m@@ -57,19 +58,23 @@[m [mpublic class SiteScraper {[m
+         return elements;[m
+     }[m
+ [m
+[32m+[m[32m    public static boolean isEqual(JSONObject currentInput, String searchJSON, String string) {[m
+[32m+[m[32m        return (Objects.equals(currentInput.get(searchJSON).toString(), string));[m
+[32m+[m[32m    }[m
+[32m+[m
+     public static void setAttributeByJson(Item item, JSONObject currentInput, HtmlElement childElem) {[m
+         boolean isFound = false;[m
+[31m-//        System.out.println(currentInput.get("searchType").toString());[m
+[31m-        if (    (Objects.equals(currentInput.get("searchType").toString(), "Attribute"))[m
+[31m-                || (Objects.equals(currentInput.get("searchType").toString(), "class"))) {[m
+[31m-            isFound = (childElem.getAttribute(currentInput.get("searchType").toString()).equals(currentInput.get("searchString").toString()));[m
+[31m-        } else if (currentInput.get("searchType") == "QualifiedName") {[m
+[31m-            isFound = Objects.equals(childElem.getQualifiedName().toString(), currentInput.get("searchAttribute").toString());[m
+[31m-        }[m
+ [m
+[32m+[m[32m        if (isEqual(currentInput, "searchType", "class")) {[m
+[32m+[m[32m            isFound = isEqual(currentInput, "searchString", childElem.getAttribute(currentInput.get("searchType").toString()));[m
+[32m+[m[32m        } else if (isEqual(currentInput, "searchType", "Attribute")) {[m
+[32m+[m[32m            isFound = ( childElem.getAttribute(currentInput.get("searchString").toString()).length() != 0 );[m
+[32m+[m[32m        }   else if (isEqual(currentInput, "searchType", "QualifiedName")) {[m
+[32m+[m[32m            isFound = isEqual(currentInput, "searchString", childElem.getQualifiedName().toString());[m
+[32m+[m[32m        }[m
+ [m
+         if (isFound) {[m
+[31m-            if (currentInput.get("pull") == "Attribute") {[m
+[32m+[m[32m            if (Objects.equals(currentInput.get("pull").toString(), "Attribute")) {[m
+                 item.setAttribute(currentInput.get("name").toString(), childElem.getAttribute(currentInput.get("searchAttribute").toString()));[m
+             } else if (Objects.equals(currentInput.get("pull").toString(), "asText")) {[m
+                 item.setAttribute(currentInput.get("name").toString(), childElem.asText());[m
+[36m@@ -80,23 +85,29 @@[m [mpublic class SiteScraper {[m
+     private static List<Item> getProductList(List<HtmlElement> elements, JSONArray itemInputs) {[m
+         List<Item> products = new ArrayList<>();[m
+         Item item;[m
+[32m+[m
+         for (HtmlElement elem : elements) {[m
+             item = new Item();[m
+ [m
+ //            item.setAttribute("amzId", elem.getAttribute((String) searchSettings.get("searchString")));[m
+[31m-[m
+[31m-            for (HtmlElement childElem : elem.getHtmlElementDescendants()) {[m
+[31m-[m
+[31m-                for (Object currentInput :  itemInputs) {[m
+[31m-                    setAttributeByJson( item, (JSONObject) currentInput, childElem);[m
+[32m+[m[32m            for (Object currentInput0 :  itemInputs) {[m
+[32m+[m[32m                JSONObject currentInput = (JSONObject) currentInput0;[m
+[32m+[m[32m                if (isRootLevel(currentInput)) {[m
+[32m+[m[32m//                    System.out.println("isRootLevel: " + currentInput.get("name"));[m
+[32m+[m[32m//                    System.out.println("searchType: " + currentInput.get("searchType").toString());[m
+[32m+[m[32m//                    System.out.println("elem: " + elem.getAttribute("data-asin"));[m
+[32m+[m[32m                    setAttributeByJson(item, currentInput, elem);[m
+[32m+[m[32m                } else {[m
+[32m+[m[32m                    for (HtmlElement childElem : elem.getHtmlElementDescendants()) {[m
+[32m+[m[32m                        if (! isRootLevel(currentInput)) {[m
+[32m+[m[32m                            setAttributeByJson( item, currentInput, childElem);[m
+[32m+[m[32m                        }[m
+[32m+[m[32m                    }[m
+                 }[m
+[31m-[m
+             }[m
+             products.add(item);[m
+[31m-        }[m
+[31m-[m
+[31m-[m
+ [m
+[32m+[m[32m        }[m
+         return products;[m
+     }[m
+ [m
+[36m@@ -154,5 +165,11 @@[m [mpublic class SiteScraper {[m
+         }[m
+     }[m
+ [m
+[32m+[m[32m    private static boolean isRootLevel(JSONObject currentInput) {[m
+[32m+[m[32m        if (currentInput.containsKey("rootLevel")) {[m
+[32m+[m[32m            return ((boolean) currentInput.get("rootLevel"));[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return false;[m
+[32m+[m[32m    }[m
+ [m
+ }[m
+[1mdiff --git a/src/com/jared/Utilities.java b/src/com/jared/Utilities.java[m
+[1mindex 821478a..e372da0 100644[m
+[1m--- a/src/com/jared/Utilities.java[m
+[1m+++ b/src/com/jared/Utilities.java[m
+[36m@@ -86,7 +86,7 @@[m [mpublic class Utilities {[m
+         return new JSONArray();[m
+     }[m
+ [m
+[31m-    /** Uses Regex to extract the Amazon product ID from a URL[m
+[32m+[m[32m    /** Uses Regex to extract the Amazon product ID from a URL (has issues)[m
+      *[m
+      * @param url[m
+      * @return[m
+[36m@@ -102,9 +102,10 @@[m [mpublic class Utilities {[m
+             return "";[m
+         }[m
+     }[m
+[31m-    /** Uses Regex to extract the Amazon product ID from a HTML String[m
+[32m+[m
+[32m+[m[32m    /** Uses Regex to extract the Amazon product ID from an HTML String[m
+      *[m
+[31m-     * @param url[m
+[32m+[m[32m     * @param htmlString[m
+      * @return[m
+      */[m
+     public static String extractAmzIdFromHTML(String htmlString) {[m
+[36m@@ -140,7 +141,7 @@[m [mpublic class Utilities {[m
+ [m
+     }[m
+ [m
+[31m-    /**[m
+[32m+[m[32m    /** Creates JSON from list of Item's (also filters based on requiredKey values[m
+      *[m
+      * @param scrapedData[m
+      * @param fileSettings[m
+[36m@@ -179,7 +180,7 @@[m [mpublic class Utilities {[m
+         return jsonArray;[m
+     }[m
+ [m
+[31m-    /**[m
+[32m+[m[32m    /** Extracts list of requiredKeys from inputsJson[m
+      *[m
+      * @param inputsJson[m
+      * @return[m
+[36m@@ -199,8 +200,8 @@[m [mpublic class Utilities {[m
+      *[m
+      * @return[m
+      */[m
+[31m-    public static ArrayList<String> extractAmzIdFromUrlJson() {[m
+[31m-        JSONArray inputsJson = arrayFromJson(".\\src\\com\\jared\\AmazonProductURLs.json");[m
+[32m+[m[32m    public static ArrayList<String> extractAmzIdFromUrlJson(String fileName) {[m
+[32m+[m[32m        JSONArray inputsJson = arrayFromJson(fileName);[m
+         ArrayList<String> urlInputs = new ArrayList<>();[m
+ [m
+         for (Object X : inputsJson) {[m
+[36m@@ -210,6 +211,10 @@[m [mpublic class Utilities {[m
+         return urlInputs;[m
+     }[m
+ [m
+[32m+[m[32m    public static ArrayList<String> extractAmzIdFromUrlJson () {[m
+[32m+[m[32m        return extractAmzIdFromUrlJson(".\\src\\com\\jared\\AmazonProductURLs.json");[m
+[32m+[m[32m    }[m
+[32m+[m
+ [m
+     public static String stringToAmzSearch (String searchInput) {[m
+         return "https://www.amazon.com/s?k=" + searchInput.replace(" ", "+").replace("'", "%27").replace("/","%2F");[m

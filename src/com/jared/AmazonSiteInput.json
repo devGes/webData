@@ -1,6 +1,7 @@
 {
   "inputType" : "AmazonItemInput.json",
-  "website" : "www.amazon.com",
+  "website" : "https://www.amazon.com",
+  "numOfNextPages" : 2,
 
   "fileName" : "output.json",
   "folderName" : ".\\data",
@@ -8,5 +9,9 @@
   "name": "amzId",
   "searchType": "Attribute",
   "searchString": "data-asin",
-  "pull": "Attribute"
+  "pull": "Attribute",
+
+  "nextSearchType": "Attribute",
+  "nextSearchString" : "aria-label",
+  "nextsearchAttribute" : "next page",
 }

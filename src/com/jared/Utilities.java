@@ -1,6 +1,7 @@
 package com.jared;
 
 
+import com.gargoylesoftware.htmlunit.WebClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,6 +18,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utilities {
+
+    /**
+     *
+     * @return
+     */
+    public static WebClient getWebClient() {
+        WebClient web = new WebClient();
+        web.setJavaScriptEnabled(false);
+        return web;
+    }
 
     /** Basic FileWriter
      *
@@ -215,9 +226,10 @@ public class Utilities {
         return extractAmzIdFromUrlJson(".\\src\\com\\jared\\AmazonProductURLs.json");
     }
 
-
     public static String stringToAmzSearch (String searchInput) {
         return "https://www.amazon.com/s?k=" + searchInput.replace(" ", "+").replace("'", "%27").replace("/","%2F");
     }
+
+
 
     }
