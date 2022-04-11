@@ -25,7 +25,7 @@ public class Utilities {
      */
     public static WebClient getWebClient() {
         WebClient web = new WebClient();
-        web.setJavaScriptEnabled(false);
+        web.getOptions().setJavaScriptEnabled(false);
         return web;
     }
 

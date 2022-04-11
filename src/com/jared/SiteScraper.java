@@ -77,7 +77,7 @@ public class SiteScraper {
 
             if ( (Objects.equals(searchSettings.get("searchType").toString(), "Attribute")) || (Objects.equals(searchSettings.get("searchType").toString(), "class"))) {
                 if(Objects.equals(searchSettings.get("pull").toString(), "asText")) {
-                    elemClass = elem.asText();
+                    elemClass = elem.asNormalizedText();
                 } else if (Objects.equals(searchSettings.get("pull").toString(), searchSettings.get("searchType").toString())) {
                     elemClass = elem.getAttribute(searchSettings.get("searchString").toString());
                 }
@@ -113,7 +113,7 @@ public class SiteScraper {
             if (Objects.equals(currentInput.get("pull").toString(), "Attribute")) {
                 item.setAttribute(currentInput.get("name").toString(), childElem.getAttribute(currentInput.get("searchAttribute").toString()));
             } else if (Objects.equals(currentInput.get("pull").toString(), "asText")) {
-                item.setAttribute(currentInput.get("name").toString(), childElem.asText());
+                item.setAttribute(currentInput.get("name").toString(), childElem.asNormalizedText());
             }
         }
     }
@@ -193,7 +193,7 @@ public class SiteScraper {
      */
     public static HtmlPage getPage(WebClient webClient, String url) {
         try {
-            webClient.setCssEnabled(false);
+            webClient.getOptions().setCssEnabled(false);
             return webClient.getPage(url);
         } catch (IOException e) {
             e.printStackTrace();
